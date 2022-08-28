@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+<h2 style="text-align: center;">Todo App</h2>
+
+<a href="{% url 'list' %}">Home</a>
+<a href="{% url 'list_with_param' 'done' %}">Done Tasks</a>
+<a href="{% url 'list_with_param' 'in-process' %}">In-process Tasks</a>
+<a href="{% url 'create' %}" style="float: right;">
+  Create new task
+</a>
+
+<hr>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Status</th>
+    <th>create</th>
+    <th>change state</th>
+    <th>edit</th>
+  </tr>
+  {% for task_obj in obj_list %}
+  		
+  	  <tr>
+	    <td>{{ task_obj.title }}</td>
+	    <td>{{ task_obj.get_status_display }}</td>
+	    <td>{{ task_obj.create }}</td>
+      {% if task_obj.get_status_display == 'to-do' %}
+        <td>
+          <a href="{% url 'change' task_obj.id %}">
+            <button>in-proccess</button>
+          </a>
+        </td>
+      {% elif task_obj.get_status_display == 'in-process' %}
+      <td>
+        <a href="{% url 'change' task_obj.id %}">
+          <button>done</button>
+        </a>
+      </td>
+      {% else %}
+      <td>
+        <a href="{% url 'delete' task_obj.id %}">
+          <button>delete</button>
+        </a>
+      </td>
+      {% endif %}
+      <td>
+        <a href="{% url 'edit' task_obj.id %}">
+          <button>edit</button>
+        </a>
+      </td>
+	  </tr>
+
+
+  {% endfor %}
+</table>
+
+</body>
+</html>
